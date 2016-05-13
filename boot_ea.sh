@@ -1,0 +1,1 @@
+echo "<result>`bless --info --getboot`</result>"
