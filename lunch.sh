@@ -16,11 +16,13 @@ dine=(
 	Mousetrap
 	AmberInn
 	Hilltop
+	BugEyedBettys
 )
 
 dash=(
 	EggRollPlus
 	Chipotle
+	NelsonCheese
 	ElPatio
 	Burrachos
 	ErbsAndGerbs
@@ -28,8 +30,14 @@ dash=(
 )
 
 if [ "$1" == "list" ] ; then
-	echo dine: ${dine[@]}
-	echo dash: ${dash[@]}
+	echo "-  Dine  -"
+	for value in "${dine[@]}"; do 
+	    printf "%-8s\n" "${value}"
+	done | column
+	echo "-  Dash  -"
+	for value in "${dash[@]}"; do 
+	    printf "%-8s\n" "${value}"
+	done | column
 elif [ "$1" == "dine" ] ; then
 	size=${#dine[@]}
 	index=$(($RANDOM % $size))
