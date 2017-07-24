@@ -17,6 +17,7 @@ dine=(
 	AmberInn
 	Hilltop
 	BugEyedBettys
+	Rice Palace
 )
 
 dash=(
