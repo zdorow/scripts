@@ -26,3 +26,5 @@ read -p "Delete the CSR? y/n " cleanup
 if [[ "$cleanup" == "y" ]] ; then
         rm $address.csr
 fi
+
+echo "Your new certificate files are located at `pwd`/$address.key and `pwd`/$address.crt"
