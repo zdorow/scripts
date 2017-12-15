@@ -3,7 +3,7 @@
 ########################################################
 #                                                      #
 #                                                      #
-#           Jamf Pro Server Summary Tool 3.0          #
+#           Jamf Pro Server Summary Tool 3.0           #
 #                   2018 - JSS 10.0.0                  #
 #            By Sam Fortuna & Nick Anderson            #
 #                                                      #
