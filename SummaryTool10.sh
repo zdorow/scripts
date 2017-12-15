@@ -3,16 +3,15 @@
 ########################################################
 #                                                      #
 #                                                      #
-#           Jamf Pro Server Summary Tool 3.0a          #
+#           Jamf Pro Server Summary Tool 3.0          #
 #                   2018 - JSS 10.0.0                  #
 #            By Sam Fortuna & Nick Anderson            #
 #                                                      #
 #                                                      #
 ########################################################
 
-
-file="/Users/nickanderson/Desktop/India Summary.txt"
-
+# Check if a file was included on start
+file="$1"
 # Demand a valid summary
 function newsummary {
 	read -p "Summary Location: " file
@@ -23,6 +22,7 @@ while [[ "$file" == "" ]] ; do
 done
 
 clear
+echo "--- Jamf Summary Parser 3.0 ---"
 
 #Check to see what kind of terminal this is to make sure we use the right echo mode, no idea why some are different in this aspect
 echotest=`echo -e "test"`
@@ -38,11 +38,8 @@ t100=`head -n 100 "$file"`
 middle_a=`cat "$file" | grep -A 500 "LDAP Servers"`
 # Pull 100 lines after Checkin
 middle_b=`cat "$file" | grep -A 500 "Check-In"`
-
 # Pull last 500 for table entries
 tables=`tail -n 500 "$file"`
-
-
 # Set the date
 todayepoch=`date +"%s"`
 
@@ -110,8 +107,14 @@ else
 fi
 # SSL cert expiration
 ssldate=`echo "$middle_a" | awk '/SSL Cert Expires/ {print $NF}'`	#get the current ssl expiration date
+dateformatssl=`echo $ssldate | sed 's/\/.*//' | wc -m`
+echo $dateformatssl
 if [[ "$ssldate" != "Expires" ]] ; then
+	if [ $dateformatssl == 5 ] ; then
+		sslepoch=`date -jf "%Y/%m/%d %H:%M" "$ssldate 00:00" +"%s"`
+	else
 	sslepoch=`date -jf "%m/%d/%y %H:%M" "$ssldate 00:00" +"%s"`			#convert it to unix epoch
+	fi
 	ssldifference=`python -c "print $sslepoch-$todayepoch"`				#subtract ssl epoch from today's epoch
 	sslresult=`python -c "print $ssldifference/86400"`					#divide by number of seconds in a day to get remaining days to expiration
 
