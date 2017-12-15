@@ -71,7 +71,7 @@ echo $echomode "Maximum MySQL Connections: \t\t $(echo "$t100" | awk '/max_conne
 # Max allowed packet
 echo $echomode "Max Allowed Packet Size: \t\t $(($(echo "$t100" | awk '/max_allowed_packet/ {print $NF}')/ 1048576)) MB"
 # Binary logging
-binlogging=`echo "$basicInfo" | awk '/log_bin ..................../ {print $NF}'`
+binlogging=`echo "$t100" | awk '/log_bin ..................../ {print $NF}'`
 if [ "$binlogging" = "OFF" ] ; then
 	echo $echomode "Bin Logging: \t\t\t\t $(echo "$t100" | awk '/log_bin ..................../ {print $NF}') \t$(tput setaf 2)✓$(tput sgr0)"
 else
@@ -131,7 +131,12 @@ fi
 # Remote IP valve
 echo $echomode "Remote IP Valve: \t\t\t $(echo "$middle_a" | awk '/Remote IP Valve/ {print $NF}')"
 # Proxy port, scheme
-echo $echomode "Proxy Port: \t\t\t\t $(echo "$middle_a" | awk '/Proxy Port/ {print $NF}') $(echo "$middle_a" | awk '/Proxy Scheme/ {print $NF}')"
+proxyportcheck=`echo "$middle_a" | awk '/Proxy Port/ {print $NF}'`
+if [[ "$proxyportcheck" != "................" ]] ; then
+	echo $echomode "Proxy Port: \t\t\t\t $(echo "$middle_a" | awk '/Proxy Port/ {print $NF}') $(echo "$middle_a" | awk '/Proxy Scheme/ {print $NF}')"
+else
+	echo $echomode "Proxy Port: \t\t\t\t $(echo "Unconfigured")"
+fi
 # Clustering
 cluster=`echo "$middle_a" | awk '/Clustering Enabled/ {print $NF}'`
 if [[ "$cluster" == "true" ]] ; then
