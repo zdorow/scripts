@@ -108,7 +108,6 @@ fi
 # SSL cert expiration
 ssldate=`echo "$middle_a" | awk '/SSL Cert Expires/ {print $NF}'`	#get the current ssl expiration date
 dateformatssl=`echo $ssldate | sed 's/\/.*//' | wc -m`
-echo $dateformatssl
 if [[ "$ssldate" != "Expires" ]] ; then
 	if [ $dateformatssl == 5 ] ; then
 		sslepoch=`date -jf "%Y/%m/%d %H:%M" "$ssldate 00:00" +"%s"`
@@ -228,7 +227,7 @@ do
 done
 
 echo $echomode
-echo $echomode "The following policies are Ongoing at recurring check-in, but do not update inventory:"
+echo $echomode "Ongoing at recurring check-in, but do not update inventory:"
 
 for i in $list 
 do
