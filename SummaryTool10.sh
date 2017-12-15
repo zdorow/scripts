@@ -36,7 +36,7 @@ fi
 t100=`head -n 100 "$file"`
 # Pull 500 lines after "LDAP Servers"
 middle_a=`cat "$file" | grep -A 500 "LDAP Servers"`
-# Pull 100 lines after Checkin
+# Pull 500 lines after Checkin
 middle_b=`cat "$file" | grep -A 500 "Check-In"`
 # Pull last 500 for table entries
 tables=`tail -n 500 "$file"`
@@ -93,7 +93,7 @@ fi
 # Tomcat version
 echo $echomode "Tomcat Version: \t\t\t $(echo "$t100" | grep "Tomcat Version" | awk '/Tomcat Version ..................................../ {for (i=4; i<NF; i++) printf $i " "; print $NF}')"
 # Webapp location
-echo $echomode "Webapp location: \t\t\t $(echo "$t100" | awk '/Web App Installed To/ {print $NF}')"
+echo $echomode "Webapp location: \t\t\t $(echo "$t100" | grep "Web App Installed To" | awk '{for (i=5; i<NF; i++) printf $i " "; print $NF}')"
 # Http threads
 echo $echomode "HTTP Threads: \t\t\t\t $(echo "$middle_a" | awk '/HTTP Connector/ {print $NF}')"
 # Https threads
