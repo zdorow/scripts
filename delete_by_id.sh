@@ -66,7 +66,7 @@ do
 	index=$[$index+1]
 	var=`cat ${file} | awk -F, '{print $'"${index}"'}'`
 
-	curl -v -k -u $username:$password $server/JSSResource/classes/id/$var -X DELETE
+	curl -v -k -u $username:$password $server/JSSResource/computers/id/$var -X DELETE
 done
 
 # Clean up
