@@ -36,14 +36,16 @@
 
 mysqluser="jamfsoftware"
 mysqlpassword="jamfsw03"
-database="yamf"
-appid="2"
+database="jamfsoftware"
+appid_1="2"
+appid_2="4"
 
 epoch=$(date +"%s")
 
-devices=$(mysql -u jamfsoftware -pjamfsw03 --database yamf -e "select mobile_device_id from mobile_devices_denormalized where is_personal=1\G" | awk '/mobile_device_id:/ {print $NF}')
+devices=$(mysql -u jamfsoftware -pjamfsw03 --database $database -e "select mobile_device_id from mobile_devices_denormalized where is_personal=1\G" | awk '/mobile_device_id:/ {print $NF}')
 
 for i in ${devices}; do
         uuid=$(uuidgen)
-        mysql -u $mysqluser -p$mysqlpassword --database $database -e "insert into mobile_device_management_commands (device_id,command,uuid,profile_id,date_sent_epoch,message_id,command_valid_after_epoch,error_english_description,error_localized_description,command_attributes,error_code,inactive,device_object_id) VALUES(${i},\"RemoveApplication\",\"${uuid}\",$appid,${epoch}000,-1,${epoch}000,\"\",\"\",\"\",-1,0,21);"
+        mysql -u $mysqluser -p$mysqlpassword --database $database -e "insert into mobile_device_management_commands (device_id,command,uuid,profile_id,date_sent_epoch,message_id,command_valid_after_epoch,error_english_description,error_localized_description,command_attributes,error_code,inactive,device_object_id) VALUES(${i},\"RemoveApplication\",\"${uuid}\",$appid_1,${epoch}000,-1,${epoch}000,\"\",\"\",\"\",-1,0,21);"
+        mysql -u $mysqluser -p$mysqlpassword --database $database -e "insert into mobile_device_management_commands (device_id,command,uuid,profile_id,date_sent_epoch,message_id,command_valid_after_epoch,error_english_description,error_localized_description,command_attributes,error_code,inactive,device_object_id) VALUES(${i},\"RemoveApplication\",\"${uuid}\",$appid_2,${epoch}000,-1,${epoch}000,\"\",\"\",\"\",-1,0,21);"
 done
