@@ -30,7 +30,7 @@
 #
 # DESCRIPTION
 #
-#	This script deletes computer records from the JSS by their name based
+#	This script deletes computer records from the JSS by their JSS ID based
 #	on input from a delimited (by newline) text file.
 #
 ####################################################################################################
