@@ -9,6 +9,7 @@ dine=(
 	Dooleys
 	ElPatio
 	Mogies
+	District
 	GrandAve
 	Plus
 	Informalist
@@ -17,7 +18,7 @@ dine=(
 	AmberInn
 	Hilltop
 	BugEyedBettys
-	Rice Palace
+	Orchid
 )
 
 dash=(
@@ -27,7 +28,6 @@ dash=(
 	ElPatio
 	Burrachos
 	ErbsAndGerbs
-	SmilingMoose
 )
 
 if [ "$1" == "list" ] ; then
