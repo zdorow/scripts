@@ -4,8 +4,9 @@
 #                                                      #
 #                                                      #
 #           Jamf Pro Server Summary Tool 3.0           #
-#                   2018 - JSS 10.0.0                  #
+#                   2019 - JSS 10.9.0                  #
 #            By Sam Fortuna & Nick Anderson            #
+#               Updated for InnoDB by Zach Dorow       #
 #                                                      #
 #                                                      #
 ########################################################
@@ -81,14 +82,51 @@ fi
 echo $echomode "MyISAM Tables:  \t\t\t $(echo "$t100" | awk '/MyISAM Tables/ {print $NF}')"
 # InnoDB tables
 echo $echomode "InnoDB Tables:  \t\t\t $(echo "$t100" | awk '/InnoDB Tables/ {print $NF}')"
-# Large tables
-echo $echomode "Tables over 1 GB in size:"
-largeTables=$(echo "$tables" | awk '/GB/ {print "\t", $(NF-1), $NF, "    ", $1}')
-if [ "$largeTables" != "" ]; then
-	echo $echomode "$largeTables"
-else
-	echo $echomode "\tNone \t$(tput setaf 2)✓$(tput sgr0)"
-fi
+
+
+# InnoDB conversion check and adjusting table sizes.
+tableCount=`echo "$t100" | awk '/MyISAM Tables/ {print $NF}'`
+
+case "$tableCount" in
+
+    0) # Large tables when converted to InnoDB. Should be broken into functions but it all works the same. 
+    echo $echomode "Tables over 2 GB in size:"
+    largeTables=$(echo "$tables" | awk '/GB/ {print "\t", $(NF-1), $NF, "    ", $1}' | awk '$1 >= "2.00" {print $0}')
+
+    if [ "$largeTables" != "" ]; then
+	    echo $echomode "$largeTables"
+    else
+	    echo $echomode "\tNone \t$(tput setaf 2)✓$(tput sgr0)"
+    fi
+    ;;
+    1) # Large tables when converted to InnoDB...again.
+    echo $echomode "Tables over 2 GB in size:"
+    largeTables=$(echo "$tables" | awk '/GB/ {print "\t", $(NF-1), $NF, "    ", $1}' | awk '$1 >= "2.00" {print $0}')
+    if [ "$largeTables" != "" ]; then
+	    echo $echomode "$largeTables"
+    else
+	    echo $echomode "\tNone \t$(tput setaf 2)✓$(tput sgr0)"
+    fi
+    ;;
+    "") # Large tables check. The next two deafult to 1 GB. 
+    echo $echomode "Tables over 1 GB in size:"
+    largeTables=$(echo "$tables" | awk '/GB/ {print "\t", $(NF-1), $NF, "    ", $1}')
+    if [ "$largeTables" != "" ]; then
+	    echo $echomode "$largeTables"
+    else
+	    echo $echomode "\tNone \t$(tput setaf 2)✓$(tput sgr0)"
+    fi
+    ;;
+    *) # Large tables check default if the other conditions are not met. 
+    echo $echomode "Tables over 1 GB in size:"
+    largeTables=$(echo "$tables" | awk '/GB/ {print "\t", $(NF-1), $NF, "    ", $1}')
+    if [ "$largeTables" != "" ]; then
+	    echo $echomode "$largeTables"
+    else
+	    echo $echomode "\tNone \t$(tput setaf 2)✓$(tput sgr0)"
+    fi
+    ;;
+esac
 
 # Tomcat version
 echo $echomode "Tomcat Version: \t\t\t $(echo "$t100" | grep "Tomcat Version" | awk '/Tomcat Version ..................................../ {for (i=4; i<NF; i++) printf $i " "; print $NF}')"
@@ -117,7 +155,7 @@ if [[ "$ssldate" != "Expires" ]] ; then
 	ssldifference=`python -c "print $sslepoch-$todayepoch"`				#subtract ssl epoch from today's epoch
 	sslresult=`python -c "print $ssldifference/86400"`					#divide by number of seconds in a day to get remaining days to expiration
 
-#If ssl is expiring in under 60 days, output remaining days in red instead of green
+# If ssl is expiring in under 60 days, output remaining days in red instead of green
 	if (( $sslresult > 60 )) ; then
 		echo $echomode "SSL Certificate Expiration: \t\t $(echo "$middle_a" | awk '/SSL Cert Expires/ {print $NF}') \t$(tput setaf 2)$sslresult Days$(tput sgr0)"
 	else
